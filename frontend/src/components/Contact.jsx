@@ -306,8 +306,8 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn-primary">
-                  Book Consultation
+                <button type="submit" className="btn-primary" disabled={consultationLoading}>
+                  {consultationLoading ? 'Booking...' : 'Book Consultation'}
                   <Calendar size={18} />
                 </button>
               </form>
