@@ -1,15 +1,18 @@
-from fastapi import FastAPI, APIRouter
+from fastapi import FastAPI, APIRouter, HTTPException
 from dotenv import load_dotenv
 from starlette.middleware.cors import CORSMiddleware
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 import logging
 from pathlib import Path
-from pydantic import BaseModel, Field, ConfigDict
+from models import (
+    ContactSubmission, ContactSubmissionCreate,
+    Consultation, ConsultationCreate,
+    BlogPost, BlogPostCreate,
+    Testimonial, TestimonialCreate
+)
 from typing import List
-import uuid
-from datetime import datetime, timezone
-
+from datetime import datetime
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -25,46 +28,154 @@ app = FastAPI()
 # Create a router with the /api prefix
 api_router = APIRouter(prefix="/api")
 
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
-# Define Models
-class StatusCheck(BaseModel):
-    model_config = ConfigDict(extra="ignore")  # Ignore MongoDB's _id field
-    
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    client_name: str
-    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
-
-class StatusCheckCreate(BaseModel):
-    client_name: str
-
-# Add your routes to the router instead of directly to app
+# Root endpoint
 @api_router.get("/")
 async def root():
-    return {"message": "Hello World"}
+    return {"message": "LEX PLEADERS INDIA API - Legal Services Platform"}
 
-@api_router.post("/status", response_model=StatusCheck)
-async def create_status_check(input: StatusCheckCreate):
-    status_dict = input.model_dump()
-    status_obj = StatusCheck(**status_dict)
-    
-    # Convert to dict and serialize datetime to ISO string for MongoDB
-    doc = status_obj.model_dump()
-    doc['timestamp'] = doc['timestamp'].isoformat()
-    
-    _ = await db.status_checks.insert_one(doc)
-    return status_obj
+# ==================== CONTACT FORM ENDPOINTS ====================
 
-@api_router.get("/status", response_model=List[StatusCheck])
-async def get_status_checks():
-    # Exclude MongoDB's _id field from the query results
-    status_checks = await db.status_checks.find({}, {"_id": 0}).to_list(1000)
-    
-    # Convert ISO string timestamps back to datetime objects
-    for check in status_checks:
-        if isinstance(check['timestamp'], str):
-            check['timestamp'] = datetime.fromisoformat(check['timestamp'])
-    
-    return status_checks
+@api_router.post("/contact", response_model=dict)
+async def create_contact_submission(contact: ContactSubmissionCreate):
+    """Handle contact form submissions"""
+    try:
+        contact_dict = contact.dict()
+        contact_obj = ContactSubmission(**contact_dict)
+        
+        # Insert into database
+        await db.contact_submissions.insert_one(contact_obj.dict())
+        
+        logger.info(f"New contact submission from {contact.name} - {contact.email}")
+        
+        return {
+            "success": True,
+            "message": "Thank you for contacting us. We'll get back to you soon.",
+            "id": contact_obj.id
+        }
+    except Exception as e:
+        logger.error(f"Error creating contact submission: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to submit contact form")
+
+@api_router.get("/contact", response_model=List[ContactSubmission])
+async def get_contact_submissions():
+    """Get all contact submissions (admin)"""
+    try:
+        submissions = await db.contact_submissions.find().sort("createdAt", -1).to_list(1000)
+        return [ContactSubmission(**sub) for sub in submissions]
+    except Exception as e:
+        logger.error(f"Error fetching contact submissions: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch contact submissions")
+
+# ==================== CONSULTATION BOOKING ENDPOINTS ====================
+
+@api_router.post("/consultations", response_model=dict)
+async def create_consultation(consultation: ConsultationCreate):
+    """Handle consultation booking requests"""
+    try:
+        consultation_dict = consultation.dict()
+        consultation_obj = Consultation(**consultation_dict)
+        
+        # Insert into database
+        await db.consultations.insert_one(consultation_obj.dict())
+        
+        logger.info(f"New consultation booking from {consultation.name} - {consultation.caseType}")
+        
+        return {
+            "success": True,
+            "message": "Your consultation request has been received. We'll confirm shortly.",
+            "bookingId": consultation_obj.id
+        }
+    except Exception as e:
+        logger.error(f"Error creating consultation: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to book consultation")
+
+@api_router.get("/consultations", response_model=List[Consultation])
+async def get_consultations():
+    """Get all consultation bookings (admin)"""
+    try:
+        consultations = await db.consultations.find().sort("createdAt", -1).to_list(1000)
+        return [Consultation(**cons) for cons in consultations]
+    except Exception as e:
+        logger.error(f"Error fetching consultations: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch consultations")
+
+# ==================== BLOG ENDPOINTS ====================
+
+@api_router.get("/blog", response_model=List[BlogPost])
+async def get_blog_posts():
+    """Get all published blog posts"""
+    try:
+        posts = await db.blog_posts.find({"published": True}).sort("date", -1).to_list(100)
+        return [BlogPost(**post) for post in posts]
+    except Exception as e:
+        logger.error(f"Error fetching blog posts: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch blog posts")
+
+@api_router.get("/blog/{post_id}", response_model=BlogPost)
+async def get_blog_post(post_id: str):
+    """Get a single blog post by ID"""
+    try:
+        post = await db.blog_posts.find_one({"id": post_id})
+        if not post:
+            raise HTTPException(status_code=404, detail="Blog post not found")
+        return BlogPost(**post)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching blog post: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch blog post")
+
+@api_router.post("/blog", response_model=BlogPost)
+async def create_blog_post(post: BlogPostCreate):
+    """Create a new blog post (admin)"""
+    try:
+        post_dict = post.dict()
+        # Generate slug from title
+        slug = post.title.lower().replace(" ", "-").replace("'", "").replace(",", "")
+        post_dict["slug"] = slug
+        
+        blog_post = BlogPost(**post_dict)
+        await db.blog_posts.insert_one(blog_post.dict())
+        
+        logger.info(f"New blog post created: {post.title}")
+        return blog_post
+    except Exception as e:
+        logger.error(f"Error creating blog post: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create blog post")
+
+# ==================== TESTIMONIALS ENDPOINTS ====================
+
+@api_router.get("/testimonials", response_model=List[Testimonial])
+async def get_testimonials():
+    """Get all approved testimonials"""
+    try:
+        testimonials = await db.testimonials.find({"approved": True}).sort("createdAt", -1).to_list(100)
+        return [Testimonial(**test) for test in testimonials]
+    except Exception as e:
+        logger.error(f"Error fetching testimonials: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch testimonials")
+
+@api_router.post("/testimonials", response_model=Testimonial)
+async def create_testimonial(testimonial: TestimonialCreate):
+    """Create a new testimonial"""
+    try:
+        testimonial_dict = testimonial.dict()
+        testimonial_obj = Testimonial(**testimonial_dict)
+        
+        await db.testimonials.insert_one(testimonial_obj.dict())
+        
+        logger.info(f"New testimonial from {testimonial.name} - {testimonial.company}")
+        return testimonial_obj
+    except Exception as e:
+        logger.error(f"Error creating testimonial: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create testimonial")
 
 # Include the router in the main app
 app.include_router(api_router)
@@ -72,17 +183,10 @@ app.include_router(api_router)
 app.add_middleware(
     CORSMiddleware,
     allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
