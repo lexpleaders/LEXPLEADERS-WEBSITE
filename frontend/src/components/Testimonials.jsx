@@ -1,8 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Quote } from 'lucide-react';
-import { testimonials } from '../mockData';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Testimonials = () => {
+  const [testimonials, setTestimonials] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await axios.get(`${API}/testimonials`);
+      setTestimonials(response.data);
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="testimonials-section">
+        <div className="container">
+          <div className="section-header">
+            <span className="section-subtitle">CLIENT TESTIMONIALS</span>
+            <h2 className="section-title">What Our Clients Say</h2>
+            <p className="section-description">Loading...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="testimonials-section">
       <div className="container">
