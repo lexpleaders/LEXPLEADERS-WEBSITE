@@ -93,9 +93,7 @@ h1, h2, h3, h4, h5, h6 {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  padding: 8px 16px;
-  background: white;
-  border-radius: 8px;
+  padding: 8px 0;
 }
 
 .logo-image {
@@ -103,7 +101,6 @@ h1, h2, h3, h4, h5, h6 {
   width: auto;
   object-fit: contain;
   max-width: 400px;
-  filter: brightness(1.05) contrast(1.1);
 }
 
 .nav-desktop {
