@@ -26,7 +26,7 @@ const Header = () => {
       <div className="header-container">
         <div className="header-logo">
           <img 
-            src="https://customer-assets.emergentagent.com/job_c527c564-4a76-43f9-9636-63c3fbd13344/artifacts/1d8yvx81_ChatGPT%20Image%20Dec%2026%2C%202025%2C%2005_47_29%20PM.png" 
+            src="https://customer-assets.emergentagent.com/job_c527c564-4a76-43f9-9636-63c3fbd13344/artifacts/bjqo23el_without%20background.png" 
             alt="LEX PLEADERS INDIA" 
             className="logo-image"
           />
