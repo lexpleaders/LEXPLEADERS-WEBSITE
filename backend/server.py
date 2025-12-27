@@ -35,6 +35,27 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Health check endpoint (for Kubernetes probes)
+@app.get("/health")
+async def health_check():
+    """Health check endpoint for Kubernetes liveness and readiness probes"""
+    try:
+        # Check database connectivity
+        await db.command('ping')
+        return {
+            "status": "healthy",
+            "service": "LEX PLEADERS INDIA API",
+            "database": "connected"
+        }
+    except Exception as e:
+        logger.error(f"Health check failed: {str(e)}")
+        return {
+            "status": "unhealthy",
+            "service": "LEX PLEADERS INDIA API",
+            "database": "disconnected",
+            "error": str(e)
+        }
+
 # Root endpoint
 @api_router.get("/")
 async def root():
