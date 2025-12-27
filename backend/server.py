@@ -124,7 +124,10 @@ async def create_consultation(consultation: ConsultationCreate):
 async def get_consultations():
     """Get all consultation bookings (admin)"""
     try:
-        consultations = await db.consultations.find().sort("createdAt", -1).to_list(1000)
+        consultations = await db.consultations.find(
+            {},
+            {"_id": 0}
+        ).sort("createdAt", -1).to_list(100)
         return [Consultation(**cons) for cons in consultations]
     except Exception as e:
         logger.error(f"Error fetching consultations: {str(e)}")
