@@ -55,7 +55,7 @@ const Hero = () => {
           <div className="stat-item">
             <Scale className="stat-icon" />
             <div>
-              <div className="stat-number">11+ Practice Areas</div>
+              <div className="stat-number">12+ Practice Areas</div>
               <div className="stat-label">Legal Expertise</div>
             </div>
           </div>
