@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { Send, Phone, Mail, MapPin, Calendar } from 'lucide-react';
 import { whatsappNumber } from '../mockData';
-import { useToast } from '../hooks/use-toast';
+import { toast } from 'sonner';
+import axios from 'axios';
+
+const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+const API = `${BACKEND_URL}/api`;
 
 const Contact = () => {
-  const { toast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,38 +26,59 @@ const Contact = () => {
     details: ''
   });
 
-  const handleContactSubmit = (e) => {
+  const [loading, setLoading] = useState(false);
+  const [consultationLoading, setConsultationLoading] = useState(false);
+
+  const handleContactSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission
-    toast({
-      title: "Message Sent!",
-      description: "Thank you for contacting us. We'll get back to you soon.",
-    });
-    setFormData({
-      name: '',
-      email: '',
-      phone: '',
-      subject: '',
-      message: ''
-    });
+    setLoading(true);
+    
+    try {
+      const response = await axios.post(`${API}/contact`, formData);
+      
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          subject: '',
+          message: ''
+        });
+      }
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.');
+      console.error('Contact form error:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleConsultationSubmit = (e) => {
+  const handleConsultationSubmit = async (e) => {
     e.preventDefault();
-    // Mock submission
-    toast({
-      title: "Consultation Booked!",
-      description: "Your consultation request has been received. We'll confirm shortly.",
-    });
-    setConsultationData({
-      name: '',
-      email: '',
-      phone: '',
-      preferredDate: '',
-      preferredTime: '',
-      caseType: '',
-      details: ''
-    });
+    setConsultationLoading(true);
+    
+    try {
+      const response = await axios.post(`${API}/consultations`, consultationData);
+      
+      if (response.data.success) {
+        toast.success(response.data.message);
+        setConsultationData({
+          name: '',
+          email: '',
+          phone: '',
+          preferredDate: '',
+          preferredTime: '',
+          caseType: '',
+          details: ''
+        });
+      }
+    } catch (error) {
+      toast.error('Failed to book consultation. Please try again.');
+      console.error('Consultation booking error:', error);
+    } finally {
+      setConsultationLoading(false);
+    }
   };
 
   return (
