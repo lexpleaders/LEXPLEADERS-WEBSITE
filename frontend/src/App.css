@@ -96,10 +96,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .logo-image {
-  height: 100px;
+  height: 140px;
   width: auto;
   object-fit: contain;
-  max-width: 300px;
+  max-width: 400px;
 }
 
 .nav-desktop {
