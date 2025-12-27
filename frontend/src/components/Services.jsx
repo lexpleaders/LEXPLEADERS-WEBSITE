@@ -27,7 +27,8 @@ const iconMap = {
   Briefcase: Briefcase,
   BookOpen: BookOpen,
   Users: Users,
-  FileCheck: FileCheck
+  FileCheck: FileCheck,
+  Rocket: Rocket
 };
 
 const Services = () => {
