@@ -684,7 +684,7 @@ section {
   height: 40px;
   border-radius: 50%;
   background: var(--brand-gold);
-  color: var(--bg-primary);
+  color: #ffffff;
   border: none;
   display: flex;
   align-items: center;
