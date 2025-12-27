@@ -88,7 +88,10 @@ async def create_contact_submission(contact: ContactSubmissionCreate):
 async def get_contact_submissions():
     """Get all contact submissions (admin)"""
     try:
-        submissions = await db.contact_submissions.find().sort("createdAt", -1).to_list(1000)
+        submissions = await db.contact_submissions.find(
+            {},
+            {"_id": 0}
+        ).sort("createdAt", -1).to_list(100)
         return [ContactSubmission(**sub) for sub in submissions]
     except Exception as e:
         logger.error(f"Error fetching contact submissions: {str(e)}")
