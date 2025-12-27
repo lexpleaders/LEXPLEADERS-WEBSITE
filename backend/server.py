@@ -139,7 +139,10 @@ async def get_consultations():
 async def get_blog_posts():
     """Get all published blog posts"""
     try:
-        posts = await db.blog_posts.find({"published": True}).sort("date", -1).to_list(100)
+        posts = await db.blog_posts.find(
+            {"published": True},
+            {"_id": 0}
+        ).sort("date", -1).to_list(100)
         return [BlogPost(**post) for post in posts]
     except Exception as e:
         logger.error(f"Error fetching blog posts: {str(e)}")
