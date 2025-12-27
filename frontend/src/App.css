@@ -1139,7 +1139,7 @@ section {
 .social-link:hover {
   background: var(--brand-gold);
   border-color: var(--brand-gold);
-  color: var(--bg-primary);
+  color: #ffffff;
   transform: translateY(-2px);
 }
 
