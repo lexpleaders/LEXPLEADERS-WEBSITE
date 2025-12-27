@@ -11,6 +11,7 @@ import {
   BookOpen, 
   Users, 
   FileCheck,
+  Rocket,
   ArrowRight
 } from 'lucide-react';
 import { services } from '../mockData';
