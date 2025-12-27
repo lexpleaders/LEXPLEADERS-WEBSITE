@@ -997,6 +997,7 @@ section {
   border: 1px solid var(--border-color);
   border-radius: 16px;
   padding: 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .form-title {
