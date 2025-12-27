@@ -103,7 +103,14 @@ async def seed_testimonials():
     if testimonials:
         await db.testimonials.insert_many(testimonials)
     
-    print(f\"✓ Seeded {len(testimonials)} testimonials\")
+    print(f"Seeded {len(testimonials)} testimonials")
 
 async def main():
-    print(\"Starting database seeding...\")\n    await seed_blog_posts()\n    await seed_testimonials()\n    print(\"✓ Database seeding completed successfully!\")\n    client.close()\n\nif __name__ == \"__main__\":\n    asyncio.run(main())
+    print("Starting database seeding...")
+    await seed_blog_posts()
+    await seed_testimonials()
+    print("Database seeding completed successfully!")
+    client.close()
+
+if __name__ == "__main__":
+    asyncio.run(main())
