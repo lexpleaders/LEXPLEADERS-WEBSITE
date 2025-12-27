@@ -200,8 +200,8 @@ const Contact = () => {
                   ></textarea>
                 </div>
 
-                <button type="submit" className="btn-primary">
-                  Send Message
+                <button type="submit" className="btn-primary" disabled={loading}>
+                  {loading ? 'Sending...' : 'Send Message'}
                   <Send size={18} />
                 </button>
               </form>
