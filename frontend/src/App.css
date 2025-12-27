@@ -740,11 +740,13 @@ section {
   padding: 32px;
   position: relative;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .testimonial-card:hover {
   border-color: var(--brand-gold);
   transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .testimonial-quote-icon {
