@@ -88,6 +88,14 @@ export const services = [
     description: "Business structuring, corporate compliance, contract drafting, negotiations, joint ventures, and legal risk management for startups and enterprises.",
     keywords: "Corporate Lawyer Delhi NCR, Contract Drafting Lawyer Delhi, Startup Legal Services NCR",
     icon: "FileCheck"
+  },
+  {
+    id: 12,
+    title: "Start-Up Advisory",
+    subtitle: "Monthly Retainership",
+    description: "Tailored legal plans on monthly retainership basis for newly registered start-ups and entrepreneurs. Comprehensive legal support including incorporation, compliance, fundraising, intellectual property, employment law, and ongoing advisory services.",
+    keywords: "Startup Lawyer Delhi NCR, Legal Retainership for Startups, Entrepreneur Legal Advisory Delhi",
+    icon: "Rocket"
   }
 ];
 
