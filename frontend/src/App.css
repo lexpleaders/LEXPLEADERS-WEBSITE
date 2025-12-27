@@ -1118,10 +1118,11 @@ section {
 }
 
 .footer-logo {
-  height: 80px;
+  height: 120px;
   width: auto;
   margin-bottom: 16px;
   object-fit: contain;
+  max-width: 350px;
 }
 
 .footer-about {
