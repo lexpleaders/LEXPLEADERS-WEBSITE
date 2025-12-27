@@ -35,7 +35,7 @@ const Footer = () => {
           {/* Company Info */}
           <div className="footer-col">
             <img 
-              src="https://customer-assets.emergentagent.com/job_c527c564-4a76-43f9-9636-63c3fbd13344/artifacts/bjqo23el_without%20background.png" 
+              src="https://customer-assets.emergentagent.com/job_c527c564-4a76-43f9-9636-63c3fbd13344/artifacts/diepdfxo_FINAL.png" 
               alt="LEX PLEADERS INDIA" 
               className="footer-logo"
             />
