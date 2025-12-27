@@ -365,6 +365,14 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3);
 }
 
+.btn-primary:disabled {
+  background: var(--text-muted);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  opacity: 0.6;
+}
+
 .btn-secondary {
   display: inline-flex;
   align-items: center;
