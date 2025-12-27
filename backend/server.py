@@ -186,7 +186,10 @@ async def create_blog_post(post: BlogPostCreate):
 async def get_testimonials():
     """Get all approved testimonials"""
     try:
-        testimonials = await db.testimonials.find({"approved": True}).sort("createdAt", -1).to_list(100)
+        testimonials = await db.testimonials.find(
+            {"approved": True},
+            {"_id": 0}
+        ).sort("createdAt", -1).to_list(100)
         return [Testimonial(**test) for test in testimonials]
     except Exception as e:
         logger.error(f"Error fetching testimonials: {str(e)}")
