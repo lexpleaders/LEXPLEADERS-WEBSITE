@@ -538,12 +538,14 @@ section {
   border-radius: 16px;
   padding: 32px;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .service-card:hover {
   border-color: var(--brand-gold);
   transform: translateY(-4px);
   background: var(--bg-card-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
 }
 
 .service-icon-wrapper {
