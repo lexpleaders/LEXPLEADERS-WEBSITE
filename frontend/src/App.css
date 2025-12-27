@@ -839,7 +839,7 @@ section {
   top: 16px;
   left: 16px;
   background: var(--brand-gold);
-  color: var(--bg-primary);
+  color: #ffffff;
   padding: 6px 16px;
   border-radius: 100px;
   font-size: 0.8rem;
