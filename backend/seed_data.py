@@ -62,10 +62,10 @@ async def seed_blog_posts():
     if blog_posts:
         await db.blog_posts.insert_many(blog_posts)
     
-    print(f\"✓ Seeded {len(blog_posts)} blog posts\")
+    print(f"Seeded {len(blog_posts)} blog posts")
 
 async def seed_testimonials():
-    \"\"\"Seed initial testimonials\"\"\"
+    """Seed initial testimonials"""
     testimonials = [
         {
             "id": str(uuid.uuid4()),
