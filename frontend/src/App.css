@@ -347,7 +347,7 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 8px;
   background: var(--brand-gold);
-  color: var(--bg-primary);
+  color: #ffffff;
   padding: 16px 32px;
   border-radius: 100px;
   font-weight: 600;
@@ -356,11 +356,13 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   text-decoration: none;
   transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(217, 119, 6, 0.2);
 }
 
 .btn-primary:hover {
   background: var(--brand-gold-light);
   transform: scale(1.02);
+  box-shadow: 0 6px 16px rgba(217, 119, 6, 0.3);
 }
 
 .btn-secondary {
@@ -381,7 +383,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .btn-secondary:hover {
   background: var(--brand-gold);
-  color: var(--bg-primary);
+  color: #ffffff;
   transform: scale(1.02);
 }
 
